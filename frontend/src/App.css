@@ -1,0 +1,41 @@
+/* Global Styles */
+body {
+  @apply bg-gray-50 text-gray-900 font-sans;
+}
+
+/* Sidebar Styles */
+.sidebar {
+  @apply w-64 bg-white shadow-lg p-4;
+}
+.sidebar h1 {
+  @apply text-2xl font-bold mb-4 text-blue-600;
+}
+.sidebar nav button {
+  @apply w-full text-left px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100;
+}
+.sidebar nav button.active {
+  @apply bg-blue-100 text-blue-600;
+}
+
+/* Main Content Styles */
+.main-content {
+  @apply flex-1 p-6 bg-gray-100 overflow-auto;
+}
+.main-content .content-wrapper {
+  @apply bg-white rounded-lg shadow-lg p-6;
+}
+
+/* Header Styles */
+h2 {
+  @apply text-xl font-semibold mb-4 text-gray-700;
+}
+
+/* File Input Styles */
+input[type="file"] {
+  @apply block w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-600 hover:file:bg-blue-100;
+}
+
+/* Loading Indicator */
+.loading {
+  @apply text-sm text-blue-500 mt-2;
+}
