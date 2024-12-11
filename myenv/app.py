@@ -10,7 +10,7 @@ from services.insights_service import generate_insights
 # from services.shotstack_service import create_video_with_shotstack
 from services.text_processing import process_text_to_csv
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='../frontend/build', static_url_path='')
 CORS(app)
 
 groq_client = init_groq_client()
