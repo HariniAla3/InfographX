@@ -11,12 +11,12 @@ def init_groq_client():
     """
     try:
         # Fetch the API key from the environment variable
-        api_key = os.environ.get("GROQ_API_KEY")
-        if not api_key:
+        GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
+        if not GROQ_API_KEY:
             raise ValueError("API key not found in environment variables. Ensure 'GROQ_API_KEY' is set.")
         
         # Initialize the Groq client
-        return Groq(api_key=api_key)
+        return Groq(api_key=GROQ_API_KEY)
     except Exception as e:
         raise RuntimeError(f"Error initializing Groq client: {e}")
 
