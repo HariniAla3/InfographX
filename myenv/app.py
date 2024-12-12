@@ -89,62 +89,6 @@ def get_insights():
         # current_app.logger.error(f"Error generating insights: {e}")
         return jsonify({"error": f"Error generating insights: {str(e)}"}), 500
 
-# @app.route('/api/create-video', methods=['POST'])
-# def create_video():
-#     """
-#     API endpoint to create a video using the Shotstack API.
-#     """
-#     try:
-#         # Get insights and visualizations from the request payload
-#         insights = request.json.get('insights', {})
-#         visualizations = request.json.get('visualizations', [])
-
-#         if not insights and not visualizations:
-#             return jsonify({"error": "Insights or visualizations are required."}), 400
-
-#         # Call the Shotstack service to create the video
-#         response = create_video_with_shotstack(insights, visualizations)
-
-#         # Return the response to the client
-#         return jsonify(response)
-
-#     except Exception as e:
-#         app.logger.error(f"Error creating video: {e}")
-#         return jsonify({"error": str(e)}), 500
-
-# Paths for temporary files
-# FRAMES_DIR = "frames"
-# OUTPUT_FILE = "static/animation.mp4"
-
-# @app.route('/export', methods=['POST'])
-# def export_video():
-#     try:
-#         # Get visualization data from the frontend
-#         data = request.json.get('data')
-#         if not data:
-#             return jsonify({'error': 'No data provided'}), 400
-
-#         # Serialize data as a JSON string for Puppeteer
-#         serialized_data = json.dumps(data)
-
-#         # Run Puppeteer script to capture frames
-#         subprocess.run(
-#             ["node", "capture-frames.js", f"--data={serialized_data}"], check=True
-#         )
-
-#         # Generate video from frames using FFMPEG
-#         subprocess.run(
-#             ["ffmpeg", "-framerate", "30", "-i", "frames/frame-%03d.png", "-c:v", "libx264", "-pix_fmt", "yuv420p", "static/animation.mp4"], check=True
-#         )
-
-#         # Cleanup frames directory
-#         for file in os.listdir("frames"):
-#             os.remove(os.path.join("frames", file))
-
-#         return send_file("static/animation.mp4", as_attachment=True)
-
-#     except Exception as e:
-#         return jsonify({'error': str(e)}), 500
     
 if __name__ == '__main__':
     app.run(debug=True)
