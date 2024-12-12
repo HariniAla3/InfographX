@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { Composition } from "remotion";
-import RechartsVisualization from "./RechartsVisulization";
+import { Composition } from "remotion"; // For Remotion integration
+import {RechartsVisualization } from "./RechartsVisualization";
+
 
 function Visualization({ data, insights }) {
-  const [chartType, setChartType] = useState(""); 
-  const [xAxis, setXAxis] = useState(""); 
-  const [yAxis, setYAxis] = useState(""); 
-  const [colorTheme, setColorTheme] = useState("default");
-  const [animationStyle, setAnimationStyle] = useState("default");
-  const [showLabels, setShowLabels] = useState(true);
-  const [replayKey, setReplayKey] = useState(0);
+  const [chartType, setChartType] = useState(""); // Selected chart type
+  const [xAxis, setXAxis] = useState(""); // Selected X-axis field
+  const [yAxis, setYAxis] = useState(""); // Selected Y-axis field
+  const [colorTheme, setColorTheme] = useState("default"); // Color theme
+  const [animationStyle, setAnimationStyle] = useState("default"); // Animation style
+  const [showLabels, setShowLabels] = useState(true); // Toggle labels
+  const [replayKey, setReplayKey] = useState(0); // For replay animation
   const [xAxisOptions, setXAxisOptions] = useState([]);
   const [yAxisOptions, setYAxisOptions] = useState([]);
 
@@ -17,7 +18,7 @@ function Visualization({ data, insights }) {
     insights?.visualization_suggestions?.[0] || null;
 
   useEffect(() => {
-    if (!chartType || !data || data.length === 0) return;
+    if (!chartType) return;
 
     const numericFields = Object.keys(data[0]).filter((field) =>
       data.every((row) => typeof row[field] === "number")
@@ -37,7 +38,7 @@ function Visualization({ data, insights }) {
   }, [chartType, data]);
 
   useEffect(() => {
-    setReplayKey((prevKey) => prevKey + 1);
+    setReplayKey((prevKey) => prevKey + 1); // Auto-replay animation on customization change
   }, [colorTheme, animationStyle]);
 
   const config = {
@@ -52,7 +53,7 @@ function Visualization({ data, insights }) {
   };
 
   const handleReplayAnimation = () => {
-    setReplayKey((prevKey) => prevKey + 1);
+    setReplayKey((prevKey) => prevKey + 1); // Manually trigger replay
   };
 
   const renderVisualization = () => {
@@ -96,7 +97,7 @@ function Visualization({ data, insights }) {
         </select>
       </div>
 
-      {chartType && (
+      {chartType && chartType !== "3d" && (
         <>
           <div className="mb-4">
             <label className="block text-gray-700 font-medium mb-2">X-Axis:</label>
@@ -160,39 +161,29 @@ function Visualization({ data, insights }) {
             </select>
           </div>
 
-          <div className="mb-4">
-            <label className="block text-gray-700 font-medium mb-2">
-              <input
-                type="checkbox"
-                checked={showLabels}
-                onChange={() => setShowLabels(!showLabels)}
-                className="mr-2"
-              />
-              Show Labels
-            </label>
-          </div>
+          <label className="block text-gray-700 font-medium mb-2">
+            <input
+              type="checkbox"
+              checked={showLabels}
+              onChange={() => setShowLabels(!showLabels)}
+              className="mr-2"
+            />
+            Show Labels
+          </label>
 
-          <div className="flex space-x-4 mb-4">
-            <button
-              onClick={handleReplayAnimation}
-              className="bg-purple-600 text-white px-4 py-2 rounded shadow hover:bg-purple-700 flex items-center"
-            >
-              Replay Animation
-            </button>
-          </div>
+          <button
+            onClick={handleReplayAnimation}
+            className="bg-purple-600 text-white px-4 py-2 rounded shadow hover:bg-purple-700 flex items-center"
+          >
+            Replay Animation
+          </button>
         </>
       )}
 
-      {chartType && xAxis && yAxis ? (
-        <div className="mt-6 bg-white rounded-lg shadow-md p-4">
-          <RechartsVisualization 
-            key={replayKey}
-            data={data} 
-            config={config} 
-          />
-        </div>
+      {chartType ? (
+        renderVisualization()
       ) : (
-        <p className="text-gray-500">Please select chart type, X-axis, and Y-axis to display the visualization.</p>
+        <p>Please select a chart type to display the visualization.</p>
       )}
 
       <Composition
