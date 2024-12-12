@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://127.0.0.1:5000/api";
+const API_BASE_URL = "https://infographx-backend.onrender.com/";
 
 // export const uploadData = async (file) => {
 //   const formData = new FormData();
