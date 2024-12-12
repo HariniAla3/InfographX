@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React from "react";
 import {
   BarChart,
   Bar,
@@ -12,9 +12,11 @@ import {
   YAxis,
   Tooltip,
   Legend,
-  ResponsiveContainer,
 } from "recharts";
-import { Canvg } from "canvg";
+import { Composition } from "remotion";
+import { Canvas } from "@react-three/fiber";
+import { Box, OrbitControls } from "@react-three/drei";
+
 
 const RechartsVisualization = ({ data, config }) => {
   const [isExporting, setIsExporting] = useState(false);
