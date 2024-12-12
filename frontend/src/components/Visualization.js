@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Composition } from "remotion"; // For Remotion integration
-import RechartsVisualization  from "./RechartsVisualization";
+import {RechartsVisualization } from "./RechartsVisualization";
 
 
 
