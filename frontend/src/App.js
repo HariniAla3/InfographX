@@ -36,7 +36,35 @@ function App() {
       {/* Header */}
       <header className="sticky top-0 z-20 bg-blue-600 shadow-md p-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-white">📊 InfographX</h1>
+          {/* App Title */}
+          <h1
+            className="text-3xl font-bold text-white cursor-pointer"
+            onClick={() => {
+              setUploadResponse(null); // Reset to data upload state
+              setActiveTab("Visualization"); // Reset active tab
+            }}
+          >
+            📊 InfographX
+          </h1>
+
+          {/* Tabs - Only visible after data upload */}
+          {uploadResponse && (
+            <div className="flex space-x-4">
+              {tabs.map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`px-4 py-2 text-lg font-semibold rounded-md transition-all duration-200 ${
+                    activeTab === tab
+                      ? "bg-white text-blue-600 shadow-md"
+                      : "text-white hover:bg-blue-700"
+                  }`}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </header>
 
@@ -52,31 +80,11 @@ function App() {
           </div>
         </main>
       ) : (
-        // Show Tabs and Main Content
-        <>
-          <nav className="sticky top-16 z-10 bg-white shadow-md">
-            <div className="max-w-7xl mx-auto flex justify-center space-x-6 py-3">
-              {tabs.map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={`px-6 py-2 text-lg font-semibold rounded-md transition-all duration-200 ${
-                    activeTab === tab
-                      ? "bg-blue-600 text-white shadow-md"
-                      : "text-gray-600 hover:text-blue-600 hover:bg-gray-100"
-                  }`}
-                >
-                  {tab}
-                </button>
-              ))}
-            </div>
-          </nav>
-          <main className="flex-1 p-6 overflow-auto">
-            <div className="max-w-5xl mx-auto bg-white shadow-lg rounded-lg p-8">
-              {renderTabContent()}
-            </div>
-          </main>
-        </>
+        <main className="flex-1 p-6 overflow-auto">
+          <div className="max-w-5xl mx-auto bg-white shadow-lg rounded-lg p-8">
+            {renderTabContent()}
+          </div>
+        </main>
       )}
     </div>
   );

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import RechartsVisualization from "./RechartsVisualization";
-import { motion } from "framer-motion";
+import { motion,AnimatePresence}from "framer-motion";
 
 function Visualization({ data, insights }) {
   const [chartType, setChartType] = useState("");
@@ -12,6 +12,7 @@ function Visualization({ data, insights }) {
   const [loopAnimation, setLoopAnimation] = useState(true); // Loop the title animation
   const [currentTitleIndex, setCurrentTitleIndex] = useState(0);
   const [isVisualizationReady, setIsVisualizationReady] = useState(false); // Toggle to show visualization
+  const [currentSummaryIndex, setCurrentSummaryIndex] = useState(0);
 
   const keyInsights = insights?.key_insights || [];
 
@@ -24,6 +25,16 @@ function Visualization({ data, insights }) {
       return () => clearInterval(interval);
     }
   }, [loopAnimation, keyInsights.length, animationSpeed]);
+  
+  useEffect(() => {
+    if (loopAnimation && insights?.summary?.length > 1) {
+      const interval = setInterval(() => {
+        setCurrentSummaryIndex((prevIndex) => (prevIndex + 1) % insights.summary.length);
+      }, animationSpeed);
+      return () => clearInterval(interval);
+    }
+  }, [loopAnimation, insights?.summary?.length, animationSpeed]);  
+  
 
   const config = {
     x: xAxis,
@@ -38,25 +49,46 @@ function Visualization({ data, insights }) {
 
   const renderAnimatedTitle = () => {
     const title = keyInsights[currentTitleIndex]?.title || "No Title Available";
+    
     return (
-      <motion.div
-        key={currentTitleIndex} // Ensures unique animations
-        initial={{ opacity: 0, x: -50 }}
-        animate={{ opacity: 1, x: 0 }}
-        exit={{ opacity: 0, x: 50 }}
-        transition={{
-          duration: 1, // Duration for each transition
-        }}
-        className="text-blue-600 font-bold text-lg mb-4"
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100%",
-        }}
-      >
-        {title}
-      </motion.div>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={`title-${currentTitleIndex}`} // Ensure a unique key
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 20 }}
+          transition={{
+            duration: 1,
+            ease: "easeInOut",
+          }}
+          className="text-blue-600 font-bold text-lg mb-4 text-center"
+        >
+          {title}
+        </motion.div>
+      </AnimatePresence>
+    );
+  };
+  
+  const renderAnimatedSummary = () => {
+    const summaries = insights?.summary || [];
+    const currentSummary = summaries[currentSummaryIndex]?.pointer || "No Summary Available";
+  
+    return (
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={`summary-${currentSummaryIndex}`} // Ensure a unique key
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{
+            duration: 1,
+            ease: "easeInOut",
+          }}
+          className="text-gray-700 font-medium text-md mt-4 text-center"
+        >
+          {currentSummary}
+        </motion.div>
+      </AnimatePresence>
     );
   };
 
@@ -177,6 +209,8 @@ function Visualization({ data, insights }) {
           <div className="flex flex-col items-center">
             {renderAnimatedTitle()}
             {renderVisualization()}
+            {renderAnimatedSummary()}
+            
           </div>
         ) : (
           <p className="text-gray-500">Select options and click "Generate Visualization" to view the chart.</p>

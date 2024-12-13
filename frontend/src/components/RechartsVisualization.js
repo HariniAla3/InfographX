@@ -38,7 +38,7 @@ const RechartsVisualization = ({ data, config }) => {
   useEffect(() => {
     const interval = setInterval(() => {
       setAnimationKey((prevKey) => prevKey + 1); // Trigger animation replay
-    }, 1000); // Adjust interval time (e.g., 3000ms for 3 seconds)
+    }, 3000);// Adjust interval time (e.g., 3000ms for 3 seconds)
 
     return () => clearInterval(interval); // Clear interval on component unmount
   }, []);
@@ -49,7 +49,7 @@ const RechartsVisualization = ({ data, config }) => {
       height: height,
       margin: { top: 20, right: 30, bottom: 30, left: 40 },
       key: animationKey, // Use key to trigger re-render and replay animation
-      animationDuration: 3000
+      animationDuration: 10000
     };
 
     if (chartType === "bar") {
