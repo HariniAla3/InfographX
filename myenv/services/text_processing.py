@@ -18,6 +18,8 @@ def process_text_to_csv(text):
         prompt = f"""
         You are an AI assistant. Analyze the following text to extract structured data.
         Identify column names and corresponding rows of data.
+        If the data spans a range (e.g., "Between 2015 and 2023...","Over the decade ....."), interpolate missing years logically.
+        Always respond with valid JSON format only.
 
         Input text:
         "{text}"
