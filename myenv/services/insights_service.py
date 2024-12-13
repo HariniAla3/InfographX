@@ -19,7 +19,7 @@ def generate_insights(df):
         if not isinstance(df, pd.DataFrame):
             raise ValueError("Invalid dataset provided. Expected a pandas DataFrame.")
         
-        # Prepare the prompt for Groq API
+       # Prepare the prompt for Groq API
         prompt = f"""
         Analyze this dataset and provide insights in JSON format:
         Columns: {list(df.columns)}
@@ -28,24 +28,16 @@ def generate_insights(df):
         Respond strictly in this JSON format:
         {{
             "key_insights": [
-                {{
-                    "title": "Main observation",
-                    "description": "Detailed explanation",
-                    "importance": "Business impact"
-                }}
+                {{"title": "Main observation", "description": "Detailed explanation", "importance": "Business impact"}}
             ],
             "trends": [
-                {{
-                    "pattern": "Identified pattern",
-                    "explanation": "Pattern meaning"
-                }}
+                {{"pattern": "Identified pattern", "explanation": "Pattern meaning"}}
             ],
             "visualization_suggestions": [
-                {{
-                    "type": "Visualization type",
-                    "reason": "Why this visualization works"
-                }}
-            ]
+                {{"type": "Visualization type", "reason": "Why this visualization works"}}
+            ],
+            "summary": Atleast two pointers [{{"pointer":A concise pointer summarizing key insights and trends within 30 words}}
+    ]
         }}
         """
         
@@ -95,7 +87,8 @@ def clean_and_parse_json(response_content):
         return {
             "key_insights": insights.get("key_insights", []),
             "trends": insights.get("trends", []),
-            "visualization_suggestions": insights.get("visualization_suggestions", [])
+            "visualization_suggestions": insights.get("visualization_suggestions", []),
+            "summary": insights.get("summary", []),  # Combined summary as a single list
         }
     except json.JSONDecodeError as e:
         raise ValueError(f"Error decoding JSON response: {e}")
