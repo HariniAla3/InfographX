@@ -139,7 +139,7 @@ const RechartsVisualization = ({ data, config }) => {
         boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
         marginTop: "20px",
       }}
-      title="Download Chart as PNG"
+      title="Capture and Download Chart as PNG"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
