@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {RechartsVisualization } from "./RechartsVisualization";
+import RechartsVisualization from "./RechartsVisualization";
 import { motion } from "framer-motion";
 
 function Visualization({ data, insights }) {
