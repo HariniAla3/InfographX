@@ -14,6 +14,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { toPng } from "html-to-image";
 
 const RechartsVisualization = ({ data, config }) => {
   const [animationKey, setAnimationKey] = useState(0);
@@ -42,6 +43,21 @@ const RechartsVisualization = ({ data, config }) => {
 
     return () => clearInterval(interval); // Clear interval on component unmount
   }, []);
+
+  const downloadChartAsImage = () => {
+    if (chartRef.current) {
+      toPng(chartRef.current, { backgroundColor: "white" })
+        .then((dataUrl) => {
+          const link = document.createElement("a");
+          link.download = "chart.png";
+          link.href = dataUrl;
+          link.click();
+        })
+        .catch((err) => {
+          console.error("Failed to export chart as PNG", err);
+        });
+    }
+  };
 
   const renderChart = () => {
     const chartProps = {
@@ -109,6 +125,39 @@ const RechartsVisualization = ({ data, config }) => {
       <ResponsiveContainer width="100%" height={height}>
         <div ref={chartRef}>{renderChart()}</div>
       </ResponsiveContainer>
+      <div
+      onClick={downloadChartAsImage}
+      style={{
+        cursor: "pointer",
+        width: "60px",
+        height: "60px",
+        background: "linear-gradient(135deg, #6B73FF, #000DFF)", // Gradient background
+        borderRadius: "50%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+        marginTop: "20px",
+      }}
+      title="Download Chart as PNG"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="white"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+        <polyline points="7 10 12 15 17 10" />
+        <line x1="12" y1="15" x2="12" y2="3" />
+      </svg>
+    </div>
+
     </div>
   );
 };
