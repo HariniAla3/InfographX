@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   BarChart,
   Bar,
@@ -12,15 +12,15 @@ import {
   YAxis,
   Tooltip,
   Legend,
+  ResponsiveContainer,
 } from "recharts";
-import { Composition } from "remotion";
-import { Canvas } from "@react-three/fiber";
-import { Box, OrbitControls } from "@react-three/drei";
 
 const RechartsVisualization = ({ data, config }) => {
-  const { x, y, chartType, colorTheme, showLabels, width, height } = config;
+  const [animationKey, setAnimationKey] = useState(0);
+  const chartRef = useRef(null);
 
-  // Define color themes
+  const { x, y, chartType, colorTheme, width = 400, height = 400 } = config;
+
   const colorSchemes = {
     default: ["#8884d8", "#82ca9d", "#ffc658"],
     modern: ["#6b5b95", "#feb236", "#d64161"],
@@ -29,94 +29,85 @@ const RechartsVisualization = ({ data, config }) => {
 
   const colors = colorSchemes[colorTheme] || colorSchemes.default;
 
-  if (chartType === "bar") {
-    return (
-      <BarChart
-        width={width || 800}
-        height={height || 400}
-        data={data}
-        margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-      >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey={x} />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        <Bar dataKey={y} fill={colors[0]}>
-          {data.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
-          ))}
-        </Bar>
-      </BarChart>
-    );
-  } else if (chartType === "line") {
-    return (
-      <LineChart
-        width={width || 800}
-        height={height || 400}
-        data={data}
-        margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-      >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey={x} />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        <Line type="monotone" dataKey={y} stroke={colors[0]} />
-      </LineChart>
-    );
-  } else if (chartType === "pie") {
-    return (
-      <PieChart width={width || 800} height={height || 400}>
-        <Pie
-          data={data}
-          dataKey={y}
-          nameKey={x}
-          cx="50%"
-          cy="50%"
-          outerRadius={150}
-          label={showLabels}
-        >
-          {data.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
-          ))}
-        </Pie>
-        <Tooltip />
-      </PieChart>
-    );
-  } else {
+  const parsedData = data.map((d) => ({
+    ...d,
+    [y]: +d[y],
+  }));
+
+  // Replay the animation infinitely
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setAnimationKey((prevKey) => prevKey + 1); // Trigger animation replay
+    }, 1000); // Adjust interval time (e.g., 3000ms for 3 seconds)
+
+    return () => clearInterval(interval); // Clear interval on component unmount
+  }, []);
+
+  const renderChart = () => {
+    const chartProps = {
+      width: width,
+      height: height,
+      margin: { top: 20, right: 30, bottom: 30, left: 40 },
+      key: animationKey, // Use key to trigger re-render and replay animation
+      animationDuration: 3000
+    };
+
+    if (chartType === "bar") {
+      return (
+        <BarChart {...chartProps} data={parsedData}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey={x} />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Bar dataKey={y} fill={colors[0]}>
+            {parsedData.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+            ))}
+          </Bar>
+        </BarChart>
+      );
+    } else if (chartType === "line") {
+      return (
+        <LineChart {...chartProps} data={parsedData}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey={x} />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Line type="monotone" dataKey={y} stroke={colors[0]} strokeWidth={2} />
+        </LineChart>
+      );
+    } else if (chartType === "pie") {
+      return (
+        <PieChart {...chartProps}>
+          <Pie
+            data={parsedData}
+            dataKey={y}
+            nameKey={x}
+            cx="50%"
+            cy="50%"
+            outerRadius={150}
+          >
+            {parsedData.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+            ))}
+          </Pie>
+          <Tooltip />
+        </PieChart>
+      );
+    }
+
     return <p>Unsupported chart type</p>;
-  }
+  };
+
+  return (
+    <div>
+      <ResponsiveContainer width="100%" height={height}>
+        <div ref={chartRef}>{renderChart()}</div>
+      </ResponsiveContainer>
+    </div>
+  );
 };
 
-const RechartsVisualizationWithVideo = ({ data, config }) => (
-  <Composition
-    id="VisualizationVideo"
-    component={() => <RechartsVisualization data={data} config={config} />}
-    durationInFrames={150}
-    fps={30}
-    width={config.width || 800}
-    height={config.height || 400}
-  />
-);
-
-// const ThreeDVisualization = ({ config = {} }) => {
-//   const { width = 800, height = 400 } = config;
-
-//   return (
-//     <Canvas
-//       style={{ width, height }}
-//       camera={{ position: [0, 0, 5], fov: 75 }}
-//     >
-//       <ambientLight intensity={0.5} />
-//       <directionalLight position={[0, 5, 5]} intensity={1} />
-//       <mesh>
-//         <Box args={[1, 1, 1]} /> {/* Render a 3D box */}
-//         <meshStandardMaterial attach="material" color="orange" />
-//       </mesh>
-//       <OrbitControls /> {/* Allow interactive controls */}
-//     </Canvas>
-//   );
-// };
-
-export { RechartsVisualization, RechartsVisualizationWithVideo };
+export default RechartsVisualization;
