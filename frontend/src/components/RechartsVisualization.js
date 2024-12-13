@@ -81,20 +81,23 @@ const RechartsVisualization = ({ data, config }) => {
     } else if (chartType === "pie") {
       return (
         <PieChart {...chartProps}>
-          <Pie
-            data={parsedData}
-            dataKey={y}
-            nameKey={x}
-            cx="50%"
-            cy="50%"
-            outerRadius={150}
-          >
-            {parsedData.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
-            ))}
-          </Pie>
-          <Tooltip />
-        </PieChart>
+        <Pie
+          data={parsedData}
+          dataKey={y}
+          nameKey={x}
+          cx="50%"
+          cy="50%"
+          outerRadius={150}
+          label={({ name, value }) => `${name}: ${value}%`} // Custom label format
+          labelLine={false}
+          animationDuration={3000}
+        >
+          {parsedData.map((entry, index) => (
+            <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
+          ))}
+        </Pie>
+        <Tooltip />
+      </PieChart>
       );
     }
 

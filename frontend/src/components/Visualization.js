@@ -8,7 +8,7 @@ function Visualization({ data, insights }) {
   const [yAxis, setYAxis] = useState("");
   const [colorTheme, setColorTheme] = useState("default");
   const [showLabels, setShowLabels] = useState(true);
-  const [animationSpeed, setAnimationSpeed] = useState(2000); // Animation duration
+  const [animationSpeed, setAnimationSpeed] = useState(4000); // Animation duration
   const [loopAnimation, setLoopAnimation] = useState(true); // Loop the title animation
   const [currentTitleIndex, setCurrentTitleIndex] = useState(0);
   const [isVisualizationReady, setIsVisualizationReady] = useState(false); // Toggle to show visualization
@@ -58,7 +58,7 @@ function Visualization({ data, insights }) {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 20 }}
           transition={{
-            duration: 1,
+            duration: 2,
             ease: "easeInOut",
           }}
           className="text-blue-600 font-bold text-lg mb-4 text-center"
@@ -76,12 +76,12 @@ function Visualization({ data, insights }) {
     return (
       <AnimatePresence mode="wait">
         <motion.div
-          key={`summary-${currentSummaryIndex}`} // Ensure a unique key
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
+          key={`summary-${currentSummaryIndex}`}
+          initial={{ opacity: 0, rotateX: 90 }} // Start flipped vertically
+          animate={{ opacity: 1, rotateX: 0 }} // Flip into position
+          exit={{ opacity: 0, rotateX: -90 }} // Flip out vertically
           transition={{
-            duration: 1,
+            duration: 2,
             ease: "easeInOut",
           }}
           className="text-gray-700 font-medium text-md mt-4 text-center"
